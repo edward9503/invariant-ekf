@@ -30,11 +30,11 @@ namespace inekf {
 class Kinematics {
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-        Kinematics(int id_in, Eigen::Matrix4d pose_in, Eigen::Matrix<double,6,6> covariance_in) : id(id_in), pose(pose_in), covariance(covariance_in) { }
+        Kinematics(int id_in, Eigen::Vector3d position_in, Eigen::Matrix<double,3,3> covariance_in) : id(id_in), position(position_in), covariance(covariance_in) { }
 
         int id;
-        Eigen::Matrix4d pose;
-        Eigen::Matrix<double,6,6> covariance;
+        Eigen::Vector3d position;
+        Eigen::Matrix<double,3,3> covariance;
 };
 
 class Landmark {
