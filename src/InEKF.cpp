@@ -40,16 +40,16 @@ ostream& operator<<(ostream& os, const Observation& o) {
 
 // ------------ InEKF -------------
 // Default constructor
-InEKF::InEKF() : g_((Eigen::VectorXd(3) << 0,0,-9.81).finished()){}
+InEKF::InEKF() : g_((Eigen::VectorXd(3) << 0,0,-9.81).finished()){skew_g_ = skew(g_);}
 
 // Constructor with noise params
-InEKF::InEKF(NoiseParams params) : g_((Eigen::VectorXd(3) << 0,0,-9.81).finished()), noise_params_(params) {}
+InEKF::InEKF(NoiseParams params) : g_((Eigen::VectorXd(3) << 0,0,-9.81).finished()), noise_params_(params) {skew_g_ = skew(g_);}
 
 // Constructor with initial state
-InEKF::InEKF(RobotState state) : g_((Eigen::VectorXd(3) << 0,0,-9.81).finished()), state_(state) {}
+InEKF::InEKF(RobotState state) : g_((Eigen::VectorXd(3) << 0,0,-9.81).finished()), state_(state) {skew_g_ = skew(g_);}
 
 // Constructor with initial state and noise params
-InEKF::InEKF(RobotState state, NoiseParams params) : g_((Eigen::VectorXd(3) << 0,0,-9.81).finished()), state_(state), noise_params_(params) {}
+InEKF::InEKF(RobotState state, NoiseParams params) : g_((Eigen::VectorXd(3) << 0,0,-9.81).finished()), state_(state), noise_params_(params) {skew_g_ = skew(g_);}
 
 // Return robot's current state
 RobotState InEKF::getState() { 
@@ -153,7 +153,7 @@ void InEKF::Propagate(const Eigen::Matrix<double,6,1>& m, double dt) {
     int dimTheta = state_.dimTheta();
     Eigen::MatrixXd A = Eigen::MatrixXd::Zero(dimP,dimP);
     // Inertial terms
-    A.block<3,3>(3,0) = skew(g_); // TODO: Efficiency could be improved by not computing the constant terms every time
+    A.block<3,3>(3,0) = skew_g_; // TODO: Efficiency could be improved by not computing the constant terms every time (Done! Shengzhi made it constant)
     A.block<3,3>(6,3) = Eigen::Matrix3d::Identity();
     // Bias terms
     A.block<3,3>(0,dimP-dimTheta) = -R;

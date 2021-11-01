@@ -99,6 +99,7 @@ class InEKF {
         RobotState state_;
         NoiseParams noise_params_;
         const Eigen::Vector3d g_; // Gravity
+        Eigen::Matrix3d skew_g_; // Skew_g
         mapIntVector3d prior_landmarks_;
         std::map<int,int> estimated_landmarks_;
         std::map<int,bool> contacts_;
